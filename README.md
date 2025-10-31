@@ -1,46 +1,148 @@
-# Getting Started with Create React App
+# 🎨 ComplyFormAI – React Frontend
+A modern React TypeScript frontend for managing and validating construction bids with MBE compliance.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 🚀 Installation & Setup Guide
 
-## Available Scripts
+### 1️⃣ Install Dependencies
 
-In the project directory, you can run:
+Open your terminal (or VS Code terminal) and navigate to your project:
 
-### `npm start`
+`npm install axios react-router-dom lucide-react
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+npm install -D tailwindcss postcss autoprefixer`
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Verify Backend is Running
 
-### `npm test`
+Backend should be running at: http://localhost:8000
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Start Frontend Development Server
 
-### `npm run build`
+npm start
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🎯 Features & Pages
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 🏠 Home Page (/)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+View all your bids
+Quick overview of bid details
+Click to navigate to bid details
+Create new bid button
 
-### `npm run eject`
+### ➕ Create Bid Page (/create-bid)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Select organization
+Enter solicitation number
+Set total amount
+Define MBE goal percentage
+Automatic redirect to bid details after creation
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 📋 Bid Detail Page (/bid/:id)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+View bid summary and statistics
+Real-time MBE percentage calculation
+Add subcontractors with work details
+Search and filter subcontractors
+Remove subcontractors
+Run compliance validation
+View validation results with color-coded status
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## 🔌 API Integration
 
-## Learn More
+The frontend connects to the FastAPI backend at http://localhost:8000/api/v1
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Available Endpoints:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### Organizations
+
+GET /organizations/ - List all organizations
+POST /organizations/ - Create new organization
+
+#### Subcontractors
+
+GET /subcontractors/ - List all subcontractors
+GET /subcontractors/search - Search subcontractors
+GET /subcontractors/{id} - Get subcontractor details
+
+#### Bids
+
+GET /bids/ - List all bids
+POST /bids/ - Create new bid
+GET /bids/{id} - Get bid with all details
+POST /bids/{id}/subcontractors - Add subcontractor to bid
+DELETE /bids/{id}/subcontractors/{bid_sub_id} - Remove subcontractor
+GET /bids/{id}/validate - Run validation on bid
+
+## 🎨 UI Components
+
+### BidForm
+Create new bids with organization selection, solicitation details, and MBE goals.
+
+### SubcontractorForm
+
+Search existing subcontractors
+Select from dropdown
+Enter work description
+Specify NAICS code
+Set subcontract value
+Toggle MBE participation
+
+### SubcontractorList
+
+Display all subcontractors in a bid
+Show certification status
+MBE indicators
+Remove functionality
+Value and NAICS display
+
+### ValidationDashboard
+
+Run validation checks
+Overall status summary
+Individual rule results
+Color-coded pass/fail/warning indicators
+Detailed error messages
+
+## 📱 Browser Compatibility
+Tested and working on:
+
+✅ Chrome 90+
+✅ Firefox 88+
+✅ Safari 14+
+✅ Edge 90+
+
+## 🧰 Tech Stack
+
+Frontend Framework: React 18 with TypeScript
+Styling: Tailwind CSS
+Routing: React Router v6
+HTTP Client: Axios
+Icons: Lucide React
+State Management: React Hooks (useState, useEffect)
+Build Tool: Create React App
+
+## 📝 Key Features
+✅ Type-Safe Development - Full TypeScript support
+✅ Real-time Validation - Instant MBE compliance checks
+✅ Responsive Design - Works on desktop and mobile
+✅ Modern UI - Clean interface with Tailwind CSS
+✅ Search & Filter - Easy subcontractor discovery
+✅ Error Handling - Comprehensive error messages
+✅ Loading States - Visual feedback for all actions
+✅ Form Validation - Client-side input validation
+
+## 🤝 Integration with Backend
+Ensure your backend is configured properly:
+
+Database: PostgreSQL running with seed data
+Backend Server: FastAPI running on port 8000
+CORS: Properly configured for http://localhost:3000
+API Endpoints: All routes accessible at /api/v1
+
+## 📚 Next Steps
+After successful setup:
+
+✅ Create a test bid
+✅ Add multiple subcontractors
+✅ Run validations
+✅ Test error scenarios
+✅ Explore all features

@@ -25,7 +25,9 @@ import {
   AlertCircle,
   Mail,
   Phone,
-  CheckSquare
+  CheckSquare,
+  Network,
+  Building2
 } from 'lucide-react';
 
 const PreBidAssessmentPage: React.FC = () => {
@@ -155,7 +157,7 @@ const PreBidAssessmentPage: React.FC = () => {
       return <AlertCircle className="w-5 h-5 text-red-500" />;
     } else if (factor.includes('WARNING')) {
       return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
-    } else if (factor.includes('GOOD')) {
+    } else if (factor.includes('GOOD') || factor.includes('EXCELLENT')) {
       return <CheckCircle className="w-5 h-5 text-green-500" />;
     }
     return <AlertTriangle className="w-5 h-5 text-gray-500" />;
@@ -274,6 +276,14 @@ const PreBidAssessmentPage: React.FC = () => {
               <TrendingUp className="w-5 h-5" />
               {running ? 'Analyzing...' : 'Run Assessment'}
             </button>
+            <button
+              onClick={() => navigate(`/subcontractors?org=${selectedOrgId}&opportunity_id=${opportunityId}`)}
+              disabled={!selectedOrgId}
+              className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              <Users className="w-5 h-5" />
+              Network
+            </button>
           </div>
         </div>
 
@@ -347,6 +357,67 @@ const PreBidAssessmentPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Organization Network Stats - NEW SECTION */}
+            {assessment.organization_network && (
+              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <Network className="w-6 h-6 text-blue-600" />
+                  <h2 className="text-xl font-semibold">Your Organization's Network</h2>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Building2 className="w-5 h-5 text-gray-600" />
+                      <p className="text-sm font-medium text-gray-600">Total Subcontractors</p>
+                    </div>
+                    <p className="text-3xl font-bold text-gray-900">
+                      {assessment.organization_network.total_count}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">In your network</p>
+                  </div>
+
+                  <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CheckCircle className="w-5 h-5 text-blue-600" />
+                      <p className="text-sm font-medium text-blue-600">MBE Subcontractors</p>
+                    </div>
+                    <p className="text-3xl font-bold text-blue-900">
+                      {assessment.organization_network.mbe_count}
+                    </p>
+                    <p className="text-xs text-blue-600 mt-1">
+                      {assessment.organization_network.total_count > 0
+                        ? `${((assessment.organization_network.mbe_count / assessment.organization_network.total_count) * 100).toFixed(0)}% of your network`
+                        : 'No network established'}
+                    </p>
+                  </div>
+
+                  <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CheckCircle className="w-5 h-5 text-purple-600" />
+                      <p className="text-sm font-medium text-purple-600">VSBE Subcontractors</p>
+                    </div>
+                    <p className="text-3xl font-bold text-purple-900">
+                      {assessment.organization_network.vsbe_count}
+                    </p>
+                    <p className="text-xs text-purple-600 mt-1">
+                      {assessment.organization_network.total_count > 0
+                        ? `${((assessment.organization_network.vsbe_count / assessment.organization_network.total_count) * 100).toFixed(0)}% of your network`
+                        : 'No network established'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    <strong>Note:</strong> Your organization network consists of subcontractors you've previously 
+                    worked with or added to your network. The assessment considers both your existing network 
+                    and available subcontractors from the directory.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Risk Factors */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <h2 className="text-xl font-semibold mb-4">Risk Analysis</h2>
@@ -366,13 +437,19 @@ const PreBidAssessmentPage: React.FC = () => {
             {/* Matching Subcontractors */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold mb-4">
-                Matching Subcontractors ({matchingSubcontractors.length})
+                Available Subcontractors from Directory ({matchingSubcontractors.length})
               </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                These are additional certified subcontractors from the directory that match this opportunity's requirements.
+              </p>
 
               {matchingSubcontractors.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <Users className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-                  <p>No matching subcontractors found for this opportunity.</p>
+                  <p>No matching subcontractors found in the directory for this opportunity.</p>
+                  <p className="text-sm mt-2">
+                    Consider expanding to your organization's existing network.
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-4">

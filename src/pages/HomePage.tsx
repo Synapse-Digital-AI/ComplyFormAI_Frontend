@@ -8,7 +8,6 @@ import {
   DollarSign,
   Target,
   Building2,
-  Users,
   Search,
   TrendingUp,
   AlertCircle,
@@ -53,11 +52,20 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">ComplyFormAI</h1>
-          <p className="text-gray-600 text-lg">
-            Your Compliance-First Platform for Government Contracting
-          </p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">ComplyFormAI</h1>
+            <p className="text-gray-600 text-lg">
+              Your Compliance-First Platform for Government Contracting
+            </p>
+          </div>
+          <button
+            onClick={() => navigate('/compliance-rules')}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 shadow-md transition-all hover:shadow-lg"
+          >
+            <Target className="w-4 h-4" />
+            Compliance Rules
+          </button>
         </div>
 
         {/* Quick Actions Grid */}
@@ -278,56 +286,6 @@ const HomePage: React.FC = () => {
               })}
             </div>
           )}
-        </div>
-
-        {/* Quick Links Footer */}
-        <div className="mt-12 pt-8 border-t border-gray-200">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <button
-              onClick={() => navigate('/organizations')}
-              className="text-left p-4 hover:bg-white rounded-lg transition-colors"
-            >
-              <Building2 className="w-5 h-5 text-gray-600 mb-2" />
-              <p className="text-sm font-medium text-gray-900">Organizations</p>
-              <p className="text-xs text-gray-500">Manage your firms</p>
-            </button>
-
-            <button
-              onClick={() => navigate('/subcontractors')}
-              className="text-left p-4 hover:bg-white rounded-lg transition-colors"
-            >
-              <Users className="w-5 h-5 text-gray-600 mb-2" />
-              <p className="text-sm font-medium text-gray-900">Subcontractors</p>
-              <p className="text-xs text-gray-500">Your network</p>
-            </button>
-
-            <button
-              onClick={() => navigate('/directory')}
-              className="text-left p-4 hover:bg-white rounded-lg transition-colors"
-            >
-              <Search className="w-5 h-5 text-gray-600 mb-2" />
-              <p className="text-sm font-medium text-gray-900">Directory</p>
-              <p className="text-xs text-gray-500">Find partners</p>
-            </button>
-
-            <button
-              onClick={() => navigate('/opportunities')}
-              className="text-left p-4 hover:bg-white rounded-lg transition-colors"
-            >
-              <TrendingUp className="w-5 h-5 text-gray-600 mb-2" />
-              <p className="text-sm font-medium text-gray-900">Opportunities</p>
-              <p className="text-xs text-gray-500">Track bids</p>
-            </button>
-
-            <button
-              onClick={() => navigate('/compliance-rules')}
-              className="text-left p-4 hover:bg-white rounded-lg transition-colors"
-            >
-              <Target className="w-5 h-5 text-gray-600 mb-2" />
-              <p className="text-sm font-medium text-gray-900">Compliance Rules</p>
-              <p className="text-xs text-gray-500">Manage rules</p>
-            </button>
-          </div>
         </div>
       </div>
     </div>

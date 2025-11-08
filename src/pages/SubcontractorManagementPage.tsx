@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { subcontractorsApi, organizationsApi } from '../api/client';
 import { Subcontractor, Organization } from '../types';
 import { ArrowLeft, Users, Edit2, Trash2, AlertCircle, CheckCircle, Search } from 'lucide-react';
 
 const SubcontractorManagementPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const orgFilter = searchParams.get('org');
+  const opportunityId = searchParams.get('opportunity_id');
+
   const [subcontractors, setSubcontractors] = useState<Subcontractor[]>([]);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  
+
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({
     legal_name: '',
@@ -23,7 +27,7 @@ const SubcontractorManagementPage: React.FC = () => {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [orgFilter]);
 
   const loadData = async () => {
     try {
@@ -31,7 +35,15 @@ const SubcontractorManagementPage: React.FC = () => {
         subcontractorsApi.getAll(),
         organizationsApi.getAll(),
       ]);
-      setSubcontractors(subsResponse.data);
+
+      let filteredSubs = subsResponse.data;
+
+      // Filter by organization if orgFilter is present
+      if (orgFilter) {
+        filteredSubs = subsResponse.data.filter(sub => sub.organization_id === orgFilter);
+      }
+
+      setSubcontractors(filteredSubs);
       setOrganizations(orgsResponse.data);
     } catch (err) {
       console.error('Failed to load data:', err);
@@ -44,10 +56,17 @@ const SubcontractorManagementPage: React.FC = () => {
   const handleSearch = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await subcontractorsApi.search(searchQuery || undefined, mbeFilter);
-      setSubcontractors(response.data);
+      let filteredSubs = response.data;
+
+      // Apply organization filter if present
+      if (orgFilter) {
+        filteredSubs = response.data.filter(sub => sub.organization_id === orgFilter);
+      }
+
+      setSubcontractors(filteredSubs);
     } catch (err) {
       console.error('Search failed:', err);
       setError('Search failed');
@@ -60,10 +79,17 @@ const SubcontractorManagementPage: React.FC = () => {
     setSearchQuery('');
     setMbeFilter(undefined);
     setLoading(true);
-    
+
     try {
       const response = await subcontractorsApi.getAll();
-      setSubcontractors(response.data);
+      let filteredSubs = response.data;
+
+      // Apply organization filter if present
+      if (orgFilter) {
+        filteredSubs = response.data.filter(sub => sub.organization_id === orgFilter);
+      }
+
+      setSubcontractors(filteredSubs);
     } catch (err) {
       console.error('Failed to load subcontractors:', err);
     } finally {
@@ -157,16 +183,22 @@ const SubcontractorManagementPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate(opportunityId ? `/assessment/${opportunityId}` : '/opportunities')}
           className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Home
+          Back
         </button>
 
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Subcontractor Management</h1>
-          <p className="text-gray-600">View, edit, and delete subcontractors</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            {orgFilter ? 'Network' : 'Subcontractor Management'}
+          </h1>
+          <p className="text-gray-600">
+            {orgFilter
+              ? `Subcontractors for ${organizations.find(o => o.id === orgFilter)?.name || 'selected organization'}`
+              : 'View, edit, and delete subcontractors'}
+          </p>
         </div>
 
         {/* Success/Error Messages */}

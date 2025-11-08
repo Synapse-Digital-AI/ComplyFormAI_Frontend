@@ -226,6 +226,11 @@ export interface PreBidAssessment {
   opportunity?: Opportunity;
   matching_subcontractors?: SubcontractorDirectory[];
   risk_factors?: string[];
+  organization_network?: {
+    total_count: number;
+    mbe_count: number;
+    vsbe_count: number;
+  };
 }
 
 export interface AssessmentRequest {

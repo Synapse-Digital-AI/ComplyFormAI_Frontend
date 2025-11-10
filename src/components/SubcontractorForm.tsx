@@ -108,7 +108,8 @@ const SubcontractorForm: React.FC<SubcontractorFormProps> = ({ bidId, onSuccess 
     }
 
     // Determine counts_toward_mbe based on breakdown entries
-    const countsTowardMbe = breakdownEntries.some(entry => entry.category === 'MBE');
+    const countsTowardMbe = breakdownEntries.some(entry =>
+      ['MBE', 'VSBE', 'WBE', 'SBE'].includes(entry.category));
 
     try {
       // Prepare breakdown data for API - backend expects array format and exactly 100%

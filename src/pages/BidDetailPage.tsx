@@ -78,12 +78,33 @@ const BidDetailPage: React.FC = () => {
     );
   }
 
-  const mbeTotal = bid.bid_subcontractors
-    ?.filter(bs => bs.counts_toward_mbe)
-    .reduce((sum, bs) => sum + (Number(bs.subcontract_value) || 0), 0) || 0;
+// --- FIX: Calculate MBE based on category_breakdown only ---
+const mbeTotal = bid.bid_subcontractors?.reduce((sum, bs) => {
+  if (!bs.category_breakdown || bs.category_breakdown.length === 0) return sum;
 
-  const mbePercentage = bid.total_amount > 0
-    ? (mbeTotal / bid.total_amount * 100).toFixed(2)
+  const mbeEntry = bs.category_breakdown.find(
+    (entry: any) => entry.category?.toLowerCase() === 'mbe'
+  );
+
+  if (!mbeEntry) return sum;
+
+  // Safely handle percentage type (string or number)
+  const rawPercentage = mbeEntry.percentage;
+  const percentage =
+    typeof rawPercentage === 'number'
+      ? rawPercentage
+      : parseFloat(rawPercentage || '0');
+
+  const value = Number(bs.subcontract_value) || 0;
+  const allocated = value * (percentage / 100);
+
+  return sum + allocated;
+}, 0) || 0;
+
+// Calculate percentage of total bid amount
+const mbePercentage =
+  bid.total_amount > 0
+    ? ((mbeTotal / bid.total_amount) * 100).toFixed(2)
     : '0.00';
 
   return (
